@@ -1,4 +1,8 @@
-# Created by https://www.gitignore.io/api/microsoftoffice
+# Created by https://www.gitignore.io/api/libreoffice,microsoftoffice
+
+### LibreOffice ###
+# LibreOffice locks
+.~lock.*#
 
 ### MicrosoftOffice ###
 *.tmp
@@ -18,4 +22,4 @@
 # Visio autosave temporary files
 *.~vsd*
 
-# End of https://www.gitignore.io/api/microsoftoffice
+# End of https://www.gitignore.io/api/libreoffice,microsoftoffice
