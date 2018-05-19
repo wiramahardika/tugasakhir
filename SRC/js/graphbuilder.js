@@ -69,8 +69,12 @@ function renderGraph(nodesJson, edgesJson){
         }
     },
     layout: {
-        randomSeed: 191006,
-        improvedLayout: true
+        randomSeed: 5,
+        improvedLayout: true,
+        hierarchical: {
+          enabled: true,
+          sortMethod: 'directed'
+        }
     }
 };
 

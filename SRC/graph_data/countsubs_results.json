@@ -1,0 +1,1 @@
+{"target": {"attr_0": 197, "attr_1": 190, "label": "target", "is_root": false, "score": 1, "dominating": [], "child": [], "visited": false, "id": "target"}, "graph_results": [{"potential_subs": 0, "clean_cut": []}, {"potential_subs": 0, "clean_cut": []}, {"potential_subs": 5, "clean_cut": ["12", "10", "7"]}], "results": {"potential_subs": 5, "clean_cut": ["12", "10", "7"]}}

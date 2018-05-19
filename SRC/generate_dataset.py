@@ -19,8 +19,10 @@ for i in range(num_of_attr):
 res.append(title_row)
 for i in range(num_of_rows):
     data_row = [i+1, "r-"+str(i+1)]
+    rand_a = random.randint(1,200)
+    rand_b = rand_a + 75
     for j in range(num_of_attr):
-        data_row.append(random.randint(1,250))
+        data_row.append(random.randint(rand_a,rand_b))
     res.append(data_row)
 
 csvfile = "dataset.csv"
