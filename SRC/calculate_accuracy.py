@@ -1,6 +1,4 @@
 import csv
-import datetime
-import sys
 import json
 
 
@@ -68,15 +66,12 @@ attribute = list(attribute[2:])
 vertex_sorted = sorted(vertex, key=generatekey, reverse=True)
 target = countsubs_results["target"]
 potential_subs = 0
-clean_cut = list()
 for subs in vertex_sorted:
-    if is_dominating(target, vertex[subs], attribute):
+    if is_dominating(vertex[subs], target, attribute):
         potential_subs += 1
-        clean_cut.append(vertex[subs]["id"])
 predicted_subs = countsubs_results["results"]["potential_subs"]
 difference = abs(potential_subs - predicted_subs)
 error_rate = (float(difference)/float(potential_subs)) * float(100.00)
 accuracy = 100.00 - error_rate
 print "Actual potential subs: "+str(potential_subs)
-print "Actual clean cut: "+",".join(str(x) for x in clean_cut)
 print "Accuracy: "+str(accuracy)+"%"

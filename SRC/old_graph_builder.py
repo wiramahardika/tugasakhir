@@ -50,6 +50,7 @@ def format_edges(v, node):
 
 def format_layer(v, node, start_point, edges, attribute, cut_size = False):
     global node_visited
+    print cut_size
     v_local = dict(v)
     result = dict()
     num_of_nodes = len(node)
@@ -87,9 +88,9 @@ def slice_vertex(v, max):
     v_thread.append(v[x:x+max])
   return v_thread
 
-def remove_from_list(origin, to_remove, exception = []):
+def remove_from_list(origin, to_remove):
   temp = set(to_remove)
-  result = [value for value in origin if value not in to_remove or value in exception]
+  result = [value for value in origin if value not in to_remove]
   return result
 
 def merge(first_list, second_list):
@@ -127,7 +128,13 @@ def find_skyline(set, v):
   return result
 
 def find_dominating(r, set, v):
-    return [s for s in set if is_dominating(v[r],v[s])]
+  result = []
+  for s in set:
+    if r is s:
+      continue
+    elif is_dominating(v[r], v[s]):
+      result.append(s)
+  return result
 
 def progress_report(node):
   global node_visited
@@ -137,74 +144,47 @@ def progress_report(node):
   sys.stdout.write("\rNumber of visited nodes: " + str(len(node_visited)) + " of " + str(num_of_nodes) + " nodes --- " + str(progress) + "%")
   sys.stdout.flush()
 
-class theThread(threading.Thread):
-    def __init__(self, idx, v_node):
-        threading.Thread.__init__(self)
-        self.idx = idx
-        self.v_node = v_node
-    def run(self):
-        v_temp = self.v_node[self.idx:]
-        for s in range(len(v_temp)):
-            # print self.v_node[self.idx],v_temp[s],self.v_node[self.idx:]
-            if is_dominating(vertex[self.v_node[self.idx]],vertex[v_temp[s]]):
-                if is_skyline(v_temp[s], vertex[self.v_node[self.idx]]["dominating"], vertex):
-                    vertex[self.v_node[self.idx]]["child"].append(v_temp[s])
-                vertex[self.v_node[self.idx]]["dominating"].append(v_temp[s])
-                vertex[v_temp[s]]["ancestor"].append(self.v_node[self.idx])
-
-def find_dominating_prop(v_node):
-    threads = []
-    for t in range(0,len(v_node)):
-      threads.append(theThread(t, v_node))
-
-    for t in threads:
-      t.start()
-
-    for t in threads:
-      t.join()
-
-
 def generatekey(x):
     results = list()
     for attr in attribute_value:
         results.append(vertex[x][attr])
     return tuple(results)
 
-def build_graph(node, thread_vertex, sub_vertex, is_initial = False):
+def build_graph(node, layer, is_initial = False):
     if not is_initial:
-        if vertex[node]["visited"] or node not in thread_vertex:
+        if vertex[node]["visited"]:
             return
         else:
-            child_cand = list(find_dominating(node, sub_vertex, vertex))
             vertex[node]["visited"] = True
-            for c in child_cand:
-                if node not in vertex[c]["parent"]:
-                    vertex[c]["parent"].append(node)
-    else:
-        child_cand = thread_vertex
-    child = find_skyline(child_cand, vertex)
-    sub_vertex_cand = remove_from_list(list(child_cand), child)
+            layer = list(find_dominating(node, layer, vertex))
+            for l in layer:
+                if node not in vertex[l]["parent"]:
+                    vertex[l]["parent"].append(node)
+    child = find_skyline(layer, vertex)
+    layer_cand = remove_from_list(list(layer), child)
     if not is_initial:
         vertex[node]["child"] = child
-        # progress_report(node)
+        progress_report(node)
     for record in child:
         if is_initial:
-            index_cut = sub_vertex.index(record)
-            build_graph(record, thread_vertex, sub_vertex[index_cut:])
+            vertex[record]["is_root"] = True
+            build_graph(record, layer_cand)
         else:
-            build_graph(record, thread_vertex, sub_vertex_cand)
+            build_graph(record, layer_cand)
     return
 
 class cdgThread(threading.Thread):
-  def __init__(self, threadID, name, thread_vertex, sub_vertex):
+  def __init__(self, threadID, name, layer):
     threading.Thread.__init__(self)
     self.threadID = threadID
     self.name = name
-    self.thread_vertex = thread_vertex
-    self.sub_vertex = sub_vertex
+    self.layer = layer
   def run(self):
     print "\nTHREAD "+self.name+" started"
-    build_graph(None, self.thread_vertex, self.sub_vertex, True)
+    build_graph(None, self.layer, True)
+    self.graph = format_graph(vertex, self.layer)
+    self.nodes = format_nodes(vertex, self.layer)
+    self.edges = format_edges(vertex, self.layer)
     t_end = datetime.datetime.now()
     self.runtime = t_end - time_start
     print "THREAD "+self.name+" finished with runtime " + str(self.runtime)
@@ -243,8 +223,6 @@ with open('dataset.csv') as csvfile:
             vertex[row[0]] = vertex_data
             vertex[row[0]]["child"] = []
             vertex[row[0]]["parent"] = []
-            vertex[row[0]]["dominating"] = []
-            vertex[row[0]]["ancestor"] = []
             vertex[row[0]]["visited"] = False
             vertex[row[0]]["is_root"] = False
             num_of_nodes+=1
@@ -254,18 +232,15 @@ attribute_value = list(attribute[2:])
 vertex_sorted = sorted(vertex, key=generatekey)
 vertex_thread = slice_vertex(vertex_sorted, max_nodes_in_thread)
 
-find_dominating_prop(vertex_sorted)
-# print vertex
-# sys.exit(0)
-# threads = []
-# for t in range(0,len(vertex_thread)):
-#   threads.append(cdgThread(t+1,"Graph Builder #"+str(t+1),vertex_thread[t],vertex_sorted))
-#
-# for t in threads:
-#   t.start()
-#
-# for t in threads:
-#   t.join()
+threads = []
+for t in range(0,len(vertex_thread)):
+  threads.append(cdgThread(t+1,"Graph Builder #"+str(t+1),vertex_thread[t]))
+
+for t in threads:
+  t.start()
+
+for t in threads:
+  t.join()
 
 import os, shutil
 folder = 'graph_data'
@@ -276,6 +251,16 @@ for the_file in os.listdir(folder):
             os.unlink(file_path)
     except Exception as e:
         print(e)
+
+tree_idx = 1
+for t in threads:
+  with open("graph_data/graph-"+str(tree_idx)+".json", 'w') as fp:
+    json.dump(t.graph, fp)
+  with open("graph_data/nodes-"+str(tree_idx)+".json", 'w') as fp:
+    json.dump(t.nodes, fp)
+  with open("graph_data/edges-"+str(tree_idx)+".json", 'w') as fp:
+    json.dump(t.edges, fp)
+  tree_idx+=1
 
 graph = format_graph(vertex, vertex_sorted)
 nodes = format_nodes(vertex, vertex_sorted)
@@ -296,8 +281,8 @@ with open("graph_data/clean_cut_layer.json", 'w') as fp:
   json.dump(clean_cut_layer, fp)
 print "\nRUNTIME RESULTS:"
 print "Number of nodes: "+str(num_of_nodes)
-# for t in threads:
-#   print "THREAD "+t.name+" finished with runtime " + str(t.runtime)
+for t in threads:
+  print "THREAD "+t.name+" finished with runtime " + str(t.runtime)
 
 time_end = datetime.datetime.now()
 full_runtime = time_end - time_start
