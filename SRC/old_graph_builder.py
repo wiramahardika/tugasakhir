@@ -31,7 +31,6 @@ def format_nodes(v, node):
             else:
                 v_local[node[x]]["label"] += ","+str(v_local[node[x]][a])
             a_idx+=1
-        # v_local[node[x]]["label"] += ")"
         v_local[node[x]]["label"] += ")\n"+str(len(v_local[node[x]]['parent']))
         result.append(v_local[node[x]])
     return result

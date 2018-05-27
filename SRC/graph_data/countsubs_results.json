@@ -1,1 +1,0 @@
-{"target": {"parent": 0, "ram": 3, "storage": 32, "label": "target", "is_root": false, "child": 0, "visited": false, "id": "target"}, "graph_results": [{"potential_subs": 5, "clean_cut": ["6", "11", "2"]}], "results": {"potential_subs": 5, "cost": 35, "clean_cut": ["6", "11", "2"]}}

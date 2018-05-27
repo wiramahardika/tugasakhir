@@ -142,7 +142,7 @@ visited = list()
 with open('graph_data/graph_full.json') as f:
     data = json.load(f)
     graph_full = dict(data)
-with open('graph_data/attribute.json') as f:
+with open('datasets/attribute.json') as f:
     data = json.load(f)
     attribute = list(data)
 with open('graph_data/edges_full.json') as f:
