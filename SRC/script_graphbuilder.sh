@@ -1,0 +1,26 @@
+#!/bin/bash
+python graph_builder.py 500000 50 500000_2,$1 &
+python graph_builder.py 500000 50 500000_3,$1 &
+python graph_builder.py 500000 50 500000_5,$1 &
+python graph_builder.py 500000 50 500000_7,$1 &
+python graph_builder.py 500000 50 500000_10,$1 &
+python graph_builder.py 500000 50 30000_2,$1 &
+python graph_builder.py 500000 50 30000_3,$1 &
+python graph_builder.py 500000 50 30000_5,$1 &
+python graph_builder.py 500000 50 30000_7,$1 &
+python graph_builder.py 500000 50 30000_10,$1 &
+python graph_builder.py 500000 50 5000000_2,$1 &
+python graph_builder.py 500000 50 5000000_3,$1 &
+python graph_builder.py 500000 50 5000000_5,$1 &
+python graph_builder.py 500000 50 5000000_7,$1 &
+python graph_builder.py 500000 50 5000000_10,$1 &
+python graph_builder.py 500000 50 5000000_2,$1 &
+python graph_builder.py 500000 50 5000000_3,$1 &
+python graph_builder.py 500000 50 5000000_5,$1 &
+python graph_builder.py 500000 50 5000000_7,$1 &
+python graph_builder.py 500000 50 5000000_10,$1 &
+python graph_builder.py 500000 50 200000_2,$1 &
+python graph_builder.py 500000 50 200000_3,$1 &
+python graph_builder.py 500000 50 200000_5,$1 &
+python graph_builder.py 500000 50 200000_7,$1 &
+python graph_builder.py 500000 50 200000_10,$1 &
