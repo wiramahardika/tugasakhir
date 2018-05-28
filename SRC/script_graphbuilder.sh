@@ -1,9 +1,9 @@
 #!/bin/bash
-python graph_builder.py 500000 50 500000_2,$1 &
-python graph_builder.py 500000 50 500000_3,$1 &
-python graph_builder.py 500000 50 500000_5,$1 &
-python graph_builder.py 500000 50 500000_7,$1 &
-python graph_builder.py 500000 50 500000_10,$1 &
+python graph_builder.py 500000 50 10000_2,$1 &
+python graph_builder.py 500000 50 10000_3,$1 &
+python graph_builder.py 500000 50 10000_5,$1 &
+python graph_builder.py 500000 50 10000_7,$1 &
+python graph_builder.py 500000 50 10000_10,$1 &
 python graph_builder.py 500000 50 30000_2,$1 &
 python graph_builder.py 500000 50 30000_3,$1 &
 python graph_builder.py 500000 50 30000_5,$1 &
