@@ -1,0 +1,2 @@
+sep=,
+time_start,time_end,num_of_rows,num_of_cols,data_type,num_of_threads,runtime,mem_usage

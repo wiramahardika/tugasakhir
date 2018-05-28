@@ -69,7 +69,7 @@ potential_subs = 0
 for subs in vertex_sorted:
     if is_dominating(vertex[subs], target, attribute):
         potential_subs += 1
-predicted_subs = countsubs_results["results"]["potential_subs"]
+predicted_subs = countsubs_results["potential_subs"]
 difference = abs(potential_subs - predicted_subs)
 error_rate = (float(difference)/float(potential_subs)) * float(100.00)
 accuracy = 100.00 - error_rate

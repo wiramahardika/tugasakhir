@@ -64,7 +64,7 @@ def find_bottom(set, v, attribute):
 
 def generick_target(attr_input, attribute):
     target = basic_target()
-    attr_value = attr_input[0].split(',')
+    attr_value = attr_input.split(',')
     for x in range(len(attribute)):
         target[attribute[x]] = int(attr_value[x])
     return target
@@ -116,89 +116,46 @@ def search_clean_cut(graph, node, target, edges, attribute, is_initial = False):
     return (cut, clean_cut)
 
 
-# ---------------------- THREADING CLASS ----------------------
-class subsCount(threading.Thread):
-    def __init__(self, threadID, name, graph, target, edges, attribute):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.graph = graph
-        self.target = target
-        self.edges = edges
-        self.attribute = attribute
-    def run(self):
-        print "THREAD "+self.name+" started"
-        gross_cut,clean_cut = search_clean_cut(self.graph, False, self.target, self.edges, self.attribute, True)
-        potential_subs = len(gross_cut)
-        self.clean_cut = clean_cut
-        self.potential_subs = potential_subs
-
-
 # ---------------------- MAIN PROGRAM ----------------------
 time_start = datetime.datetime.now()
 print "Program started"
-
+try:
+    session = sys.argv[2].split(',')
+    session_name = session[0]
+    session_type = session[1]
+    session_full_id = "_"+session_name+"_"+session_type
+except IndexError:
+    session = False
+    session_name = ""
+    session_type = ""
+    session_full_id = ""
 visited = list()
-with open('graph_data/graph_full.json') as f:
+with open('session'+session_full_id+'/graph.json') as f:
     data = json.load(f)
-    graph_full = dict(data)
-with open('datasets/attribute.json') as f:
+    graph = dict(data)
+with open('session'+session_full_id+'/attribute.json') as f:
     data = json.load(f)
     attribute = list(data)
-with open('graph_data/edges_full.json') as f:
+with open('session'+session_full_id+'/edges.json') as f:
     data = json.load(f)
     edges = list(data)
-graph = list()
-graph_file = glob.glob('graph_data/graph-*.json')
-graph_file.sort()
-for gf in graph_file:
-    with open(gf) as f:
-        data = json.load(f)
-    g_dict = dict(data)
-    graph.append(g_dict)
-target = generick_target(sys.argv[1:], attribute)
+target = generick_target(sys.argv[1], attribute)
 threads = []
-for t in range(0,len(graph)):
-    threads.append(subsCount(t+1,"Subs Counter #"+str(t+1),graph[t],target,edges,attribute))
-for t in threads:
-    t.start()
-for t in threads:
-    t.join()
-print "\n\n====================\n"
-clean_cut = list()
-potential_subs = 0
-graph_results = list()
-for t in threads:
-    print t.name+" RESULTS:"
-    print "Clean cut: "+",".join(str(x) for x in t.clean_cut)
-    print "Potential subscribers: "+str(t.potential_subs)
-    clean_cut += t.clean_cut
-    potential_subs += t.potential_subs
-    graph_results_data = {
-        "clean_cut": t.clean_cut,
-        "potential_subs": t.potential_subs
-    }
-    graph_results.append(graph_results_data)
+gross_cut,clean_cut = search_clean_cut(graph,False,target,edges,attribute, True)
+potential_subs = len(gross_cut)
 print "\n\n====================\n"
 print "FINAL RESULTS:"
-print "Clean cut: "+",".join(str(x) for x in clean_cut)
 print "Potential subscribers: "+str(potential_subs)
-cost = calculate_cost(target, graph_full, attribute)
+cost = calculate_cost(target, graph, attribute)
 print "Cost: " + str(cost)
 print "\n"
 results = {
-    "clean_cut": clean_cut,
+    "target": target,
     "potential_subs": potential_subs,
     "cost": cost
 }
-
-results_json = {
-    "target": target,
-    "graph_results": graph_results,
-    "results": results
-}
-with open("graph_data/countsubs_results.json", 'w') as fp:
-  json.dump(results_json, fp)
+with open("session"+session_full_id+"/countsubs_results.json", 'w') as fp:
+    json.dump(results, fp)
 
 print "RUNTIME RESULTS:"
 time_end = datetime.datetime.now()

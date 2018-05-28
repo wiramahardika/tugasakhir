@@ -19,20 +19,8 @@ with open('covtype.data') as csvfile:
     for row in readCSV:
         data.append(row[0:10])
         idx+=1
-attribute = [
-    "id",
-    "label",
-    "Elevation",
-    "Aspect",
-    "Slope",
-    "Horizontal_Distance_To_Hydrology",
-    "Vertical_Distance_To_Hydrology",
-    "Horizontal_Distance_To_Roadways",
-    "Hillshade_9am",
-    "Hillshade_Noon",
-    "Hillshade_3pm",
-    "Horizontal_Distance_To_Fire_Points"
-]
+with open('datasets/attribute.json') as f:
+    attribute = list(json.load(f))
 
 r = list(range(len(data)))
 random.shuffle(r)
@@ -44,8 +32,6 @@ for i in r[0:num_of_rows]:
     res_temp += list(map(int,data[i][0:num_of_cols]))
     res.append(res_temp)
     idx+=1
-with open("datasets/attribute.json", 'w') as fp:
-    json.dump(attribute[0:2+num_of_cols], fp)
 with open("datasets/forest_cover/dataset_"+str(num_of_rows)+"_"+str(num_of_cols)+".csv", "w") as output:
     writer = csv.writer(output, lineterminator='\n')
     writer.writerows(res)
