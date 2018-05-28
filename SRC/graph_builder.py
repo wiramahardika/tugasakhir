@@ -38,7 +38,6 @@ def format_nodes(v, node):
 
 def format_layer(v, node, start_point, edges, attribute, cut_size = False):
     global node_visited
-    print cut_size
     v_local = dict(v)
     result = dict()
     num_of_nodes = len(node)
@@ -247,7 +246,6 @@ for attr in attribute_value:
         "min": vertex[vertex_min[0]][attr],
         "max": vertex[vertex_min[-1]][attr]
     }
-print properties
 vertex_sorted = sorted(vertex, key=generatekey)
 vertex_thread = slice_vertex(vertex_sorted, max_nodes_in_thread)
 threads = []
@@ -257,7 +255,7 @@ for t in threads:
     t.start()
 for t in threads:
     t.join()
-folder = 'session'
+folder = 'session'+session_full_id
 for the_file in os.listdir(folder):
     file_path = os.path.join(folder, the_file)
     try:
