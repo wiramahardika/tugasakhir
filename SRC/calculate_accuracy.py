@@ -1,5 +1,6 @@
 import csv
 import json
+import sys
 
 
 def is_dominating(subject, target, attribute):
@@ -41,10 +42,24 @@ def generatekey(x):
         results.append(vertex[x][attr])
     return tuple(results)
 
+try:
+    session = sys.argv[1].split(',')
+    session_name = session[0]
+    session_type = session[1]
+    session_full_id = "_"+session_name+"_"+session_type
+except IndexError:
+    session = False
+    session_name = ""
+    session_type = ""
+    session_full_id = ""
 num_of_nodes = 0
 vertex = dict()
 attribute = list()
-with open('dataset.csv') as csvfile:
+if session:
+    dataset_filename = "datasets/"+session_type+"/dataset_"+session_name+".csv"
+else:
+    dataset_filename = "dataset.csv"
+with open(dataset_filename) as csvfile:
     readCSV = csv.reader(csvfile, delimiter=',')
     init = True
     for row in readCSV:
@@ -60,7 +75,7 @@ with open('dataset.csv') as csvfile:
             vertex[row[0]] = vertex_data
             num_of_nodes+=1
         init = False
-with open('graph_data/countsubs_results.json') as f:
+with open('session'+session_full_id+'/countsubs_results.json') as f:
     countsubs_results = dict(json.load(f))
 attribute = list(attribute[2:])
 vertex_sorted = sorted(vertex, key=generatekey, reverse=True)

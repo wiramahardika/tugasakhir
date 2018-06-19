@@ -1,0 +1,50 @@
+<html
+          xmlns:o='urn:schemas-microsoft-com:office:office'
+          xmlns:w='urn:schemas-microsoft-com:office:word'
+          xmlns:v='urn:schemas-microsoft-com:vml'
+          xmlns='http://www.w3.org/TR/REC-html40'>
+          <head><title>Cetak Cover Proposal</title>
+              <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+              <[if gte mso 9]>
+                 <xml>
+                     <w:WordDocument>
+                     <w:View>Print</w:View>
+                     <w:Zoom>100</w:Zoom>
+                     <w:DoNotOptimizeForBrowser/>
+                     </w:WordDocument>
+                 </xml>
+             <![endif]>
+             <style>
+                 < /* Style Definitions */
+                     @page Section1
+                     {size:8.27in 11.69in;
+                     margin:1.18in 1.0in 1.0in 1.0in ;
+                     mso-header-margin:.5in;
+                     mso-footer-margin:.5in; mso-paper-source:0;}
+                     div.Section1
+                     {page:Section1;}
+                 >
+             </style>
+          </head>
+          <body>
+          <div class=Section1>
+          <table align='left' border='0' style='width:600px;'>
+          <tr align='center'><td colspan='2'><font size='6'>Lembar Persetujuan</font></td></tr>
+          <tr align='center'><td colspan='2'><font size='6'>Maju Sidang Tugas Akhir</font></td></tr>
+          <tr align='center' style='height:70px;'><td>&nbsp;</td></tr>
+          <tr align='center'><td colspan='2'><font size='6'>Desain dan Implementasi Aplikasi untuk Menjawab Permasalahan Why-Not on Reaching k Subscribers</size></td></tr>
+          <tr align='center'><td colspan='2'><font size='5'>(3470)</size></td></tr>
+          <tr align='center' style='height:70px;'><td>&nbsp;</td></tr>
+          <tr align='center'><td colspan='2'><font size='4'>I PUTU EKA WIRA MAHARDIKA</font></td></tr>
+          <tr align='center'><td colspan='2'><font size='3'>05111440000025</font></td></tr>
+          <tr align='center' style='height:70px;'><td>&nbsp;</td></tr>
+          <tr align='center'><td colspan='2'><font size='4'>Surabaya, .......................................</font></td></tr>
+          <tr align='center' style='height:70px;'><td>&nbsp;</td></tr>
+          <tr align='center'><td colspan='2'><font size='5'>Menyetujui,</font></td></tr>
+          <tr align='center'><td style='width:50%'><font size='5'>Dosen Pembimbing 1</font></td><td><font size='5'>Dosen Pembimbing 2</font></td></tr>
+          <tr><td>&nbsp;<br/><br/><br/><br/><br/></td></tr>
+          <tr align='center'><td><font size='4'>HENNING TITI CIPTANINGTYAS, S.Kom., M.Kom.</font></td><td><font size='4'>BAGUS JATI SANTOSO, S.Kom., Ph.D.</font></td></tr>
+          <tr align='center'><td><font size='3'>NIP. 198407082010122004</font></td><td><font size='3'>NIP. 198611252018031001</font></td></tr>
+          </table>
+          </body>
+          </html>

@@ -85,35 +85,22 @@ def generatekey(x):
 
 def search_clean_cut(graph, node, target, edges, attribute, is_initial = False):
     cut = list()
-    clean_cut = list()
-    if is_initial:
-        child_dict = {k: v for k, v in graph.iteritems() if v["is_root"]}
-        child = child_dict.keys()
-    else:
+    if not is_initial:
         if node in visited:
-            return (None,None)
+            print "Returned because node",node,"has been visited"
+            return cut
         else:
-            child = [d['to'] for d in edges if d['from'] == node]
-    debug_cut = list()
+            visited.append(node)
     if is_initial or is_dominating(graph[node], target, attribute):
-        is_clean_cut = False
-        for next in child:
-            cut_tmp,clean_cut_tmp = search_clean_cut(graph, next, target, edges, attribute)
-            if not(cut_tmp is None):
-                cut += cut_tmp
-                clean_cut += clean_cut_tmp
-                if len(cut_tmp) is 0:
-                    is_clean_cut = True
-                    debug_cut.append(next)
-                else:
-                    visited.append(next)
-        if node:
+        if is_initial:
+            child_dict = {k: v for k, v in graph.iteritems() if v["is_root"]}
+            child = child_dict.keys()
+        else:
             cut.append(node)
-            if is_clean_cut:
-                if node == '7':
-                    print 'haha',debug_cut
-                clean_cut.append(node)
-    return (cut, clean_cut)
+            child = [d['to'] for d in edges if d['from'] == node]
+        for next in child:
+            cut += search_clean_cut(graph, next, target, edges, attribute)
+    return cut
 
 
 # ---------------------- MAIN PROGRAM ----------------------
@@ -141,18 +128,15 @@ with open('session'+session_full_id+'/edges.json') as f:
     edges = list(data)
 target = generick_target(sys.argv[1], attribute)
 threads = []
-gross_cut,clean_cut = search_clean_cut(graph,False,target,edges,attribute, True)
+gross_cut = search_clean_cut(graph,False,target,edges,attribute, True)
 potential_subs = len(gross_cut)
 print "\n\n====================\n"
 print "FINAL RESULTS:"
 print "Potential subscribers: "+str(potential_subs)
-cost = calculate_cost(target, graph, attribute)
-print "Cost: " + str(cost)
 print "\n"
 results = {
     "target": target,
     "potential_subs": potential_subs,
-    "cost": cost
 }
 with open("session"+session_full_id+"/countsubs_results.json", 'w') as fp:
     json.dump(results, fp)

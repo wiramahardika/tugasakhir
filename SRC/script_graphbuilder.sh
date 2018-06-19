@@ -14,11 +14,6 @@ python graph_builder.py 500000 50 50000_3,$1 &
 python graph_builder.py 500000 50 50000_5,$1 &
 python graph_builder.py 500000 50 50000_7,$1 &
 python graph_builder.py 500000 50 50000_10,$1 &
-python graph_builder.py 500000 50 50000_2,$1 &
-python graph_builder.py 500000 50 50000_3,$1 &
-python graph_builder.py 500000 50 50000_5,$1 &
-python graph_builder.py 500000 50 50000_7,$1 &
-python graph_builder.py 500000 50 50000_10,$1 &
 python graph_builder.py 500000 50 100000_2,$1 &
 python graph_builder.py 500000 50 100000_3,$1 &
 python graph_builder.py 500000 50 100000_5,$1 &

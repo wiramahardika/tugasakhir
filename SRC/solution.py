@@ -94,7 +94,7 @@ try:
     weight = dict()
     for i in range(len(attribute)):
         weight[attribute[i]] = float(weight_list[i])
-except IndexError:
+except (IndexError,ValueError) as e:
     weight = dict()
     weight_default = 1.0/float(len(attribute))
     for i in range(len(attribute)):
@@ -105,35 +105,40 @@ layer_indices = sorted(map(int, layer_indices))
 layer = str([l for l in layer_indices if l <= expected_subs][-1])
 node_visited = list()
 new_clean_cut = find_new_clean_cut(graph, False, expected_subs, edges, attribute, clean_cut_layer[layer], True)
-# new_clean_cut = find_skyline(new_clean_cut, graph, attribute)
+new_clean_cut = find_skyline(new_clean_cut, graph, attribute)
 solution = None
-solution_cost = 999.0
+solution_penalty = 999.0
 normalized_before = dict()
 for attr in attribute:
     normalized_before[attr] = normalize_attr(properties[attr]["min"], properties[attr]["max"], countsubs_results["target"][attr])
-print normalized_before
+if len(new_clean_cut) <= 0:
+    graph['00'] = dict()
+    for attr in attribute:
+        graph['00'][attr] = properties[attr]["max"]
+    graph['00']['score'] = len(graph)-1
+    graph['00']['label'] = "R00"
+    new_clean_cut.append('00')
 for new in new_clean_cut:
     print new
-    cost_attr = dict()
-    cost = 0.0
+    penalty = 0.0
     for attr in attribute:
         normalized_after = normalize_attr(properties[attr]["min"], properties[attr]["max"], graph[new][attr])
-        cost += ((normalized_after - normalized_before[attr]) * (1.0 - weight[attr]))
+        penalty += ((normalized_after - normalized_before[attr]) * (1.0 - weight[attr]))
         print attr,":",graph[new][attr],((normalized_after - normalized_before[attr]) * weight[attr])
-    if cost < solution_cost:
+    if penalty < solution_penalty:
         solution = new
-        solution_cost = cost
+        solution_penalty = penalty
     print "subscribers :",graph[new]["score"]
-    print "cost :",cost
+    print "penalty :",penalty
     print "\n"
+print "Number of solution candidate",len(new_clean_cut)
 print "BEST SOLUTION:"
 print solution
 for attr in attribute:
     print attr,":",graph[solution][attr]
 print "subscribers :",graph[solution]["score"]
-print "cost :",solution_cost
+print "penalty :",solution_penalty
 print "\n"
-
 print "\nRUNTIME RESULTS:"
 print "Number of nodes: "+str(len(graph))
 time_end = datetime.datetime.now()
@@ -165,15 +170,17 @@ res_data.append("|".join(list(map(str, weight_list))))
 res_data.append("|".join(list(map(str, initial_value))))
 res_data.append("|".join(list(map(str, recomended_value))))
 res_data.append(graph[solution]["label"])
-res_data.append(solution_cost)
+res_data.append(solution_penalty)
 res_data.append(full_runtime)
 res_data.append(mem_usage)
 res.append(res_data)
 if session:
+    print "Saved to session_log/solution_script.csv"
     with open("session_log/solution_script.csv", "a") as output:
         writer = csv.writer(output, lineterminator='\n')
         writer.writerows(res)
 else:
+    print session,"Saved to session_log/solution_manual.csv"
     with open("session_log/solution_manual.csv", "a") as output:
         writer = csv.writer(output, lineterminator='\n')
         writer.writerows(res)
